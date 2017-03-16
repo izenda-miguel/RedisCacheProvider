@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Izenda.BI.CacheProvider.RedisCache", "Izenda.BI.CacheProvider.RedisCache\Izenda.BI.CacheProvider.RedisCache.csproj", "{3AF09378-54A9-4BEA-A1AF-50840FE33FB5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Izenda.BI.CacheProvider.RedisCache.Test", "Izenda.BI.CacheProvider.RedisCache.Test\Izenda.BI.CacheProvider.RedisCache.Test.csproj", "{C9EB5DB1-19D0-43D1-BA11-23C10B49D879}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Driver", "Driver\Driver.csproj", "{485ED369-3DDE-4E0B-80B5-951C1EEC4B13}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3AF09378-54A9-4BEA-A1AF-50840FE33FB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3AF09378-54A9-4BEA-A1AF-50840FE33FB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3AF09378-54A9-4BEA-A1AF-50840FE33FB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3AF09378-54A9-4BEA-A1AF-50840FE33FB5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C9EB5DB1-19D0-43D1-BA11-23C10B49D879}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9EB5DB1-19D0-43D1-BA11-23C10B49D879}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9EB5DB1-19D0-43D1-BA11-23C10B49D879}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9EB5DB1-19D0-43D1-BA11-23C10B49D879}.Release|Any CPU.Build.0 = Release|Any CPU
+		{485ED369-3DDE-4E0B-80B5-951C1EEC4B13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{485ED369-3DDE-4E0B-80B5-951C1EEC4B13}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{485ED369-3DDE-4E0B-80B5-951C1EEC4B13}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{485ED369-3DDE-4E0B-80B5-951C1EEC4B13}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
