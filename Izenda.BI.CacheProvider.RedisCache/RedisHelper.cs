@@ -14,7 +14,13 @@ namespace Izenda.BI.CacheProvider.RedisCache
         {
             // Get redis cache configuration
             redisCacheConfiguration = WebConfigUtil.GetSection("redisCacheSettings") as RedisCacheConfiguration;
-            connection = ConnectionMultiplexer.Connect(redisCacheConfiguration.ConnectionString);
+            connection = GetConnection();
+            database = connection.GetDatabase();
+        }
+
+        private static IConnectionMultiplexer GetConnection()
+        {
+            return ConnectionMultiplexer.Connect(redisCacheConfiguration.ConnectionStringWithOptions);
         }
 
         private static IConnectionMultiplexer connection = null;
@@ -24,7 +30,7 @@ namespace Izenda.BI.CacheProvider.RedisCache
             {
                 if (connection == null)
                 {
-                    connection = ConnectionMultiplexer.Connect(redisCacheConfiguration.ConnectionString);
+                    connection = GetConnection();
                 }
 
                 return connection;

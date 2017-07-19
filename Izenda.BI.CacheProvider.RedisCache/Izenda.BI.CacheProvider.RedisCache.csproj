@@ -16,7 +16,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\Users\corey\Source\7\Synergy\src\Izenda.Synergy.WebAPI\bin\</OutputPath>
+    <OutputPath>..\..\Mvc5StarterKit\Mvc5StarterKit\bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -76,6 +76,7 @@
     <Compile Include="RedisCacheProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RedisConnectionHelper.cs" />
+    <Compile Include="RedisHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="libs\" />
