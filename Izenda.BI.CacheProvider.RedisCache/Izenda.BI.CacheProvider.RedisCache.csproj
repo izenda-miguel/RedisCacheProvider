@@ -16,7 +16,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\Mvc5StarterKit\Mvc5StarterKit\bin\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -77,6 +77,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RedisConnectionHelper.cs" />
     <Compile Include="RedisHelper.cs" />
+    <Compile Include="Resolvers\IzendaSerializerContractResolver.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="libs\" />
