@@ -1,5 +1,7 @@
 ﻿using Izenda.BI.CacheProvider.RedisCache.Constants;
 using Izenda.BI.CacheProvider.RedisCache.Converters;
+using Izenda.BI.CacheProvider.RedisCache.Resolvers;
+using Izenda.BI.Framework.Models.ReportDesigner;
 using Newtonsoft.Json;
 using StackExchange.Redis;
 using System;
@@ -42,11 +44,16 @@ namespace Izenda.BI.CacheProvider.RedisCache
         /// </summary>
         private void InitSerializer()
         {
+            var resolver = new IzendaSerializerContractResolver();
+            resolver.Ignore(typeof(ReportDefinition), "PropertyInfos");
+            resolver.Ignore(typeof(ReportPartDefinition), "ReportPartContent");
+
             _serializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             _serializerSettings.TypeNameHandling = TypeNameHandling.Objects;
             _serializerSettings.TypeNameAssemblyFormat = System.Runtime.Serialization.Formatters.FormatterAssemblyStyle.Simple;
 
             _serializerSettings.Converters.Add(new DBServerTypeSupportingConverter());
+            _serializerSettings.ContractResolver = resolver;
         }
 
         /// <summary>
