@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Threading;
+using System.Linq;
 
 namespace Izenda.BI.CacheProvider.RedisCache
 {
@@ -22,10 +23,13 @@ namespace Izenda.BI.CacheProvider.RedisCache
         private JsonSerializerSettings _serializerSettings = new JsonSerializerSettings();
         private readonly ReaderWriterLockSlim _lockCache = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
         private readonly IDatabase _cache;
+        private readonly IServer _server;
 
         public RedisCacheProvider()
         {
-            _cache = RedisConnectionHelper.Instance;
+            _cache = RedisHelper.Database;
+            _server = RedisHelper.Server;
+
             InitSerializer();
         }
 
@@ -168,7 +172,34 @@ namespace Izenda.BI.CacheProvider.RedisCache
             }
             catch (Exception ex)
             {
+                Trace.Write(string.Format(AppConstants.ExceptionTemplate, ex.ToString()));
+            }
+            finally
+            {
+                _lockCache.ExitWriteLock();
+            }
+        }
 
+        /// <summary>
+        /// Removes the keys matching the specified pattern.
+        /// </summary>
+        /// <param name="pattern">The pattern. </param>
+        public void RemoveKeyWithPattern(string pattern)
+        {
+            var keysToRemove = _server.Keys(_cache.Database, pattern);
+
+            try
+            {
+                _lockCache.EnterWriteLock();
+
+                foreach (var key in keysToRemove)
+                {
+                    _cache.KeyDelete(key);
+                }
+            }
+            catch (Exception ex)
+            {
+                Trace.Write(string.Format(AppConstants.ExceptionTemplate, ex.ToString()));
             }
             finally
             {
