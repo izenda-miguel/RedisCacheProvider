@@ -45,6 +45,8 @@ namespace Izenda.BI.CacheProvider.RedisCache.Resolvers
         /// <returns></returns>
         public bool IsIgnored(Type type, string propertyName)
         {
+            if (type == null) return false;
+
             if (!this.Ignores.ContainsKey(type)) return false;
 
             // if no properties provided, ignore the type entirely
