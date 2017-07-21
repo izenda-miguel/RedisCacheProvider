@@ -36,6 +36,7 @@ This a custom cache provider that utilizes the Redis cache.
   </evoPdfSettings>
 
   <!--Redis Cache Provider-->
-  <redisCacheSettings connectionString="127.0.0.1:6379,abortConnect=false"/> 
+  <redisCacheSettings connectionString="127.0.0.1:6379" additionalOptions="abortConnect=false"/>
+  
 ```
 4. Restart the API instance
