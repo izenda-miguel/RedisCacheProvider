@@ -115,7 +115,7 @@ namespace Izenda.BI.CacheProvider.RedisCache
                 || (type.IsGenericType && type.GenericTypeArguments.Any(t => t == typeof(Object)))
                 || type.FullName.StartsWith("Izenda.BI.DataAdaptor.IDataSourceAdaptor")
                 || type.FullName.StartsWith("Izenda.BI.Logging.ILogManager")
-                || type.FullName.StartsWith("Izenda.BI.DataAdaptor.IDataSourceAdaptor");
+                || type.FullName.StartsWith("Izenda.BI.SystemRepository.ISystemRepository");
         }
 
         /// <summary>
