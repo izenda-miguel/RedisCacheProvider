@@ -13,6 +13,7 @@ using System.Linq;
 using Izenda.BI.Framework.CustomAttributes;
 using System.Collections.Concurrent;
 using Izenda.BI.Framework.Constants;
+using log4net;
 
 namespace Izenda.BI.CacheProvider.RedisCache
 {
@@ -23,6 +24,7 @@ namespace Izenda.BI.CacheProvider.RedisCache
     public class RedisCacheProvider : ICacheProvider, IDisposable
     {
         private static ConcurrentDictionary<string, object> _mem = new ConcurrentDictionary<string, object>();
+        private static readonly ILog logger = LogManager.GetLogger("RedisCacheLogger");
         private bool _disposed = false;
         private JsonSerializerSettings _serializerSettings = new JsonSerializerSettings();
         private readonly ReaderWriterLockSlim _lockCache = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
@@ -90,12 +92,13 @@ namespace Izenda.BI.CacheProvider.RedisCache
             try
             {
                 _lockCache.EnterWriteLock();
-                if(IsInMemoryCache(key, typeof(T)))
+                if (IsInMemoryCache(key, typeof(T)))
                 {
                     _mem.AddOrUpdate(key, value, (existingKey, oldValue) => value);
                 }
                 else
                 {
+                    this.LogKeyAndValueAsInfo(key, value);
                     _cache.StringSet(key, Serialize(value));
                 }
             }
@@ -136,6 +139,7 @@ namespace Izenda.BI.CacheProvider.RedisCache
                 }
                 else
                 {
+                    this.LogKeyAndValueAsInfo(key, value);
                     _cache.StringSet(key, Serialize(value), expiration);
                 }
             }
@@ -372,6 +376,20 @@ namespace Izenda.BI.CacheProvider.RedisCache
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Logs the key and value as an info log
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="value">The value.</param>
+        private void LogKeyAndValueAsInfo(string key, object value)
+        {
+            logger.Info(new
+            {
+                Key = key,
+                Value = value
+            });
         }
 
         /// <summary>

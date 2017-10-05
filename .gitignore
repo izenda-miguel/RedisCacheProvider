@@ -1,5 +1,6 @@
 *.suo
 *.user
+*.log
 _ReSharper.*
 *lock.json
 packages
