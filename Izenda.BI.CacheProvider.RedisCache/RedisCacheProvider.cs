@@ -92,15 +92,8 @@ namespace Izenda.BI.CacheProvider.RedisCache
             try
             {
                 _lockCache.EnterWriteLock();
-                if (IsInMemoryCache(key, typeof(T)))
-                {
-                    _mem.AddOrUpdate(key, value, (existingKey, oldValue) => value);
-                }
-                else
-                {
-                    this.LogKeyAndValueAsInfo(key, value);
-                    _cache.StringSet(key, Serialize(value));
-                }
+                this.LogKeyAndValueAsInfo(key, value);
+                _cache.StringSet(key, Serialize(value));
             }
             catch (Exception ex)
             {
@@ -110,16 +103,6 @@ namespace Izenda.BI.CacheProvider.RedisCache
             {
                 _lockCache.ExitWriteLock();
             }
-        }
-
-        private bool IsInMemoryCache(string key, Type type)
-        {
-            return key == IzendaKey.HashCodeMetadata
-                || (type.IsGenericType && type.GenericTypeArguments.Any(t => t == typeof(Object)))
-                || type.FullName.StartsWith("Izenda.BI.DataAdaptor.IDataSourceAdaptor")
-                || type.FullName.StartsWith("Izenda.BI.Logging.ILogManager")
-                || type.FullName.StartsWith("Izenda.BI.SystemRepository.ISystemRepository")
-                || type.FullName.StartsWith("Izenda.BI.Framework.Models.Contexts.UserContext");
         }
 
         /// <summary>
@@ -133,15 +116,8 @@ namespace Izenda.BI.CacheProvider.RedisCache
             try
             {
                 _lockCache.EnterWriteLock();
-                if (IsInMemoryCache(key, value.GetType()))
-                {
-                    _mem.AddOrUpdate(key, value, (existingKey, oldValue) => value);
-                }
-                else
-                {
-                    this.LogKeyAndValueAsInfo(key, value);
-                    _cache.StringSet(key, Serialize(value), expiration);
-                }
+                this.LogKeyAndValueAsInfo(key, value);
+                _cache.StringSet(key, Serialize(value), expiration);
             }
             catch (Exception ex)
             {
@@ -182,21 +158,11 @@ namespace Izenda.BI.CacheProvider.RedisCache
         /// <returns></returns>
         public T Get<T>(string key)
         {
-            
-            if (IsInMemoryCache(key, typeof(T)))
-            {
-                object value;
-                _mem.TryGetValue(key, out value);
-                return (T)value;
-            }
-            else
-            {
-                var result = _cache.StringGet(key);
-                if (result.IsNullOrEmpty)
-                    return default(T);
+            var result = _cache.StringGet(key);
+            if (result.IsNullOrEmpty)
+                return default(T);
 
-                return Deserialize<T>(result);
-            }
+            return Deserialize<T>(result);
         }
 
         /// <summary>
@@ -312,14 +278,7 @@ namespace Izenda.BI.CacheProvider.RedisCache
                 _lockCache.EnterWriteLock();
                 if (newValue != null)
                 {
-                    if (IsInMemoryCache(key, typeof(T)))
-                    {
-                        _mem.AddOrUpdate(key, newValue, (existingKey, oldValue) => newValue);
-                    }
-                    else
-                    {
-                        _cache.StringSet(key, Serialize(newValue), expiration);
-                    }
+                    _cache.StringSet(key, Serialize(newValue), expiration);
                 }
             }
             catch (Exception ex)
