@@ -13,6 +13,7 @@ using System.Linq;
 using Izenda.BI.Framework.CustomAttributes;
 using System.Collections.Concurrent;
 using Izenda.BI.Framework.Constants;
+using log4net;
 
 namespace Izenda.BI.CacheProvider.RedisCache
 {
@@ -24,6 +25,7 @@ namespace Izenda.BI.CacheProvider.RedisCache
     public class RedisCacheProvider : ICacheProvider, IDisposable
     {
         private bool _disposed = false;
+        private static readonly ILog logger = LogManager.GetLogger("RedisCacheLogger");
         private JsonSerializerSettings _serializerSettings = new JsonSerializerSettings();
         private readonly ReaderWriterLockSlim _lockCache = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
         private readonly IDatabase _cache;
@@ -323,6 +325,15 @@ namespace Izenda.BI.CacheProvider.RedisCache
             }
 
             return result;
+        }
+
+        private void LogKeyAndValueAsInfo(string key, object value)
+        {
+            logger.Info(new
+            {
+                Key = key,
+                Value = value
+            });
         }
 
         /// <summary>
