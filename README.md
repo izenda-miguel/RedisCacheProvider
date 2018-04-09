@@ -3,6 +3,8 @@
 ## Overview
 This a custom cache provider that utilizes the Redis cache.  
 
+:warning: The current version of this project will only work with Izenda versions 2.4.4+
+
 ## Installation
 
 1. Build the project and copy the following dlls to the bin folder of your Izenda API :

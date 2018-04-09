@@ -20,6 +20,7 @@ namespace Izenda.BI.CacheProvider.RedisCache
     /// <summary>
     /// Redis cache provider
     /// </summary>
+    #warning The current version of this project will only work with Izenda versions 2.4.4+
     [Export(typeof(ICacheProvider))]
     public class RedisCacheProvider : ICacheProvider, IDisposable
     {
@@ -92,7 +93,6 @@ namespace Izenda.BI.CacheProvider.RedisCache
             try
             {
                 _lockCache.EnterWriteLock();
-                this.LogKeyAndValueAsInfo(key, value);
                 _cache.StringSet(key, Serialize(value));
             }
             catch (Exception ex)
@@ -116,7 +116,6 @@ namespace Izenda.BI.CacheProvider.RedisCache
             try
             {
                 _lockCache.EnterWriteLock();
-                this.LogKeyAndValueAsInfo(key, value);
                 _cache.StringSet(key, Serialize(value), expiration);
             }
             catch (Exception ex)
@@ -147,7 +146,7 @@ namespace Izenda.BI.CacheProvider.RedisCache
         /// <returns>true if the cache contains the key, false otherwise</returns>
         public bool Contains(string key)
         {
-            return _mem.ContainsKey(key) ? true : _cache.KeyExists(key);
+            return _cache.KeyExists(key);
         }
 
         /// <summary>
@@ -157,7 +156,7 @@ namespace Izenda.BI.CacheProvider.RedisCache
         /// <param name="key">The key</param>
         /// <returns></returns>
         public T Get<T>(string key)
-        {
+        {            
             var result = _cache.StringGet(key);
             if (result.IsNullOrEmpty)
                 return default(T);
@@ -174,11 +173,7 @@ namespace Izenda.BI.CacheProvider.RedisCache
             try
             {
                 _lockCache.EnterWriteLock();
-                object value;
-                if(!_mem.TryRemove(key, out value))
-                {
-                    _cache.KeyDelete(key);
-                }
+                _cache.KeyDelete(key);
             }
             catch (Exception ex)
             {
@@ -204,11 +199,7 @@ namespace Izenda.BI.CacheProvider.RedisCache
 
                 foreach (var key in keysToRemove)
                 {
-                    object value;
-                    if (!_mem.TryRemove(key, out value))
-                    {
-                        _cache.KeyDelete(key);
-                    }
+                    _cache.KeyDelete(key);
                 }
             }
             catch (Exception ex)
