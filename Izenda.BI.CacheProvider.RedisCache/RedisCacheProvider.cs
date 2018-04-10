@@ -89,10 +89,15 @@ namespace Izenda.BI.CacheProvider.RedisCache
         /// <param name="value"> The value </param>
         public void Add<T>(string key, T value)
         {
+            var stopwatch = new Stopwatch();
+            var json = string.Empty;
+
             try
             {
+                stopwatch.Start();
                 _lockCache.EnterWriteLock();
-                _cache.StringSet(key, Serialize(value));
+                json = Serialize(value);
+                _cache.StringSet(key, json);
             }
             catch (Exception ex)
             {
@@ -100,6 +105,8 @@ namespace Izenda.BI.CacheProvider.RedisCache
             }
             finally
             {
+                stopwatch.Stop();
+                this.LogInfo(key, json, stopwatch.Elapsed.TotalSeconds);
                 _lockCache.ExitWriteLock();
             }
         }
@@ -111,11 +118,16 @@ namespace Izenda.BI.CacheProvider.RedisCache
         /// <param name="value"> The value</param>
         /// <param name="expiration"> The expiration </param>
         public void AddWithExactLifetime(string key, object value, TimeSpan expiration)
-        {  
+        {
+            var stopwatch = new Stopwatch();
+            var json = string.Empty;
+
             try
             {
+                stopwatch.Start();
                 _lockCache.EnterWriteLock();
-                _cache.StringSet(key, Serialize(value), expiration);
+                json = Serialize(value);
+                _cache.StringSet(key, json, expiration);
             }
             catch (Exception ex)
             {
@@ -123,6 +135,8 @@ namespace Izenda.BI.CacheProvider.RedisCache
             }
             finally
             {
+                stopwatch.Stop();
+                this.LogInfo(key, json, stopwatch.Elapsed.TotalSeconds);
                 _lockCache.ExitWriteLock();
             }
         }
@@ -155,12 +169,19 @@ namespace Izenda.BI.CacheProvider.RedisCache
         /// <param name="key">The key</param>
         /// <returns></returns>
         public T Get<T>(string key)
-        {            
+        {
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+
             var result = _cache.StringGet(key);
             if (result.IsNullOrEmpty)
                 return default(T);
 
-            return Deserialize<T>(result);
+            var value = Deserialize<T>(result);
+            stopwatch.Stop();
+            this.LogInfo(key, result, stopwatch.Elapsed.TotalSeconds);
+
+            return value;
         }
 
         /// <summary>
@@ -327,12 +348,13 @@ namespace Izenda.BI.CacheProvider.RedisCache
             return result;
         }
 
-        private void LogKeyAndValueAsInfo(string key, object value)
+        private void LogInfo(string key, object value, double elapsedSeconds)
         {
             logger.Info(new
             {
                 Key = key,
-                Value = value
+                Value = value,
+                ProcessingTime = $"{elapsedSeconds} seconds"
             });
         }
 
